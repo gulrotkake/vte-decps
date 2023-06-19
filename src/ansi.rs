@@ -668,6 +668,8 @@ pub trait Handler {
 
     /// Set hyperlink.
     fn set_hyperlink(&mut self, _: Option<Hyperlink>) {}
+
+    fn play_sound(&mut self, _: u16, _: u16, _: Vec<u16>) {}
 }
 
 /// Terminal cursor configuration.
@@ -1498,6 +1500,11 @@ where
             ('u', []) => handler.restore_cursor_position(),
             ('X', []) => handler.erase_chars(next_param_or(1) as usize),
             ('Z', []) => handler.move_backward_tabs(next_param_or(1)),
+            ('~', [b',']) => handler.play_sound(
+                next_param_or(0),
+                next_param_or(0),
+                params_iter.map(|param| param[0]).collect(),
+            ),
             _ => unhandled!(),
         }
     }
